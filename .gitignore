@@ -30,3 +30,5 @@ eggs/
 *-checkpoint.ipynb
 !tests/data
 data.zip
+archive.zip
+memotion_dataset_7k
