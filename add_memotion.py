@@ -25,15 +25,14 @@ configuration = Configuration()
 config = configuration.get_config()
 data_dir = config.env.data_dir
 hateful_memes_img_dir = data_dir + "/datasets/hateful_memes/defaults/images/img"
-print("Dataset location of original hateful memes is ", hateful_memes_img_dir)
+# print("Dataset location of original hateful memes is ", hateful_memes_img_dir)
 
-# # Copy over memotion dataset images in original hateful_memes dataset
-for img in memotion_image_labels:
-    shutil.copy(f"{img_dir+img}", os.path.join(hateful_memes_img_dir, f"{img}"))
-    print("Copied ", img , "into hateful_memes dataset directory")
+# # # Copy over memotion dataset images in original hateful_memes dataset
+# for img in memotion_image_labels:
+#     shutil.copy(f"{img_dir+img}", os.path.join(hateful_memes_img_dir, f"{img}"))
+#     print("Copied ", img , "into hateful_memes dataset directory")
 
 print("Reading original hateful memes training set info: train.jsonl ")
-train = pd.read_json("C:/Users/User/.cache/torch/mmf/data/datasets/hateful_memes/defaults/annotations/train.jsonl", lines=True)
 train = pd.read_json(os.path.join(data_dir, "datasets/hateful_memes/defaults/annotations/train.jsonl"), lines=True)
 # Load labeled Memotion data
 memotion = pd.read_json("./label_memotion.jsonl", lines=True)
