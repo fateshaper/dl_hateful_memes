@@ -1,51 +1,100 @@
+# OMSCS 7643 Fall 2023 Project
 
-<div align="center">
-<img src="https://mmf.sh/img/logo.svg" width="50%"/>
-</div>
+This is our OMSCS 7643 Group Project, on the Meta's Hateful Meme Challenge when using Multimodal Deep Learning.
 
-#
+Authors:
 
-<div align="center">
-  <a href="https://mmf.sh/docs">
-  <img alt="Documentation Status" src="https://readthedocs.org/projects/mmf/badge/?version=latest"/>
-  </a>
-  <a href="https://circleci.com/gh/facebookresearch/mmf">
-  <img alt="CircleCI" src="https://circleci.com/gh/facebookresearch/mmf.svg?style=svg"/>
-  </a>
-</div>
+* ylow33@gatech.edu
+* gcheang3@gatech.edu
+* jchin47@gatech.edu
 
----
+## Proposal / Overview
 
-MMF is a modular framework for vision and language multimodal research from Facebook AI Research. MMF contains reference implementations of state-of-the-art vision and language models and has powered multiple research projects at Facebook AI Research. See full list of project inside or built on MMF [here](https://mmf.sh/docs/notes/projects).
 
-MMF is powered by PyTorch, allows distributed training and is un-opinionated, scalable and fast. Use MMF to **_bootstrap_** for your next vision and language multimodal research project by following the [installation instructions](https://mmf.sh/docs/). Take a look at list of MMF features [here](https://mmf.sh/docs/getting_started/features).
+In 2020, Meta released the [Hateful Meme Challenge](https://mmf.sh/docs/challenges/hateful_memes_challenge/). Along with this with the [mmf](https://github.com/facebookresearch/mmf) framework.
 
-MMF also acts as **starter codebase** for challenges around vision and
-language datasets (The Hateful Memes, TextVQA, TextCaps and VQA challenges). MMF was formerly known as Pythia. The next video shows an overview of how datasets and models work inside MMF. Checkout MMF's [video overview](https://mmf.sh/docs/getting_started/video_overview).
-
+* We wanted to add additional data from [Memotion]( https://competitions.codalab.org/competitions/20629) and see whether it affects the performance of the mutlimodal models. 
+* We also explored using image & text embeddings with [open_clip](https://github.com/mlfoundations/open_clip)
 
 ## Installation
 
-Follow installation instructions in the [documentation](https://mmf.sh/docs/).
+We are using Ubuntu 22.04.2 LTS (GNU/Linux 6.2.0-37-generic x86_64), along with a Nvidia RTX 4090 Card.
 
-## Documentation
+For background information on installation on various python / cuda drivers, please refer to this [blog post](https://lowyx.com/posts/deep-learning-rig/).
 
-Learn more about MMF [here](https://mmf.sh/docs).
 
-## Citation
+The main instructions can be found at the [mmf instlalation docs](https://mmf.sh/docs/) but a couple of updates are required for us to get it working. Based on the [latest pytorch getting started](https://pytorch.org/get-started/locally/), it requires Python 3.8. **Hence, do not follow the mmf's documentation to install python 3.7**. If you are reading this and PyTorch requires python 3.9 and above, please adjust accordingly. 
 
-If you use MMF in your work or use any models published in MMF, please cite:
-
-```bibtex
-@misc{singh2020mmf,
-  author =       {Singh, Amanpreet and Goswami, Vedanuj and Natarajan, Vivek and Jiang, Yu and Chen, Xinlei and Shah, Meet and
-                 Rohrbach, Marcus and Batra, Dhruv and Parikh, Devi},
-  title =        {MMF: A multimodal framework for vision and language research},
-  howpublished = {\url{https://github.com/facebookresearch/mmf}},
-  year =         {2020}
-}
+```
+conda create -n mmf python=3.8
+conda activate mmf
 ```
 
-## License
+```bash
+git clone https://github.com/facebookresearch/mmf.git
+cd mmf
+```
 
-MMF is licensed under BSD license available in [LICENSE](LICENSE) file
+In `requirements.txt`, please edit out `pycocotools`. This is because it will cause the insallation to break.
+
+```
+pip install --editable .
+```
+
+```bash
+pip3 install torch torchvision torchaudio --force-reinstall  --extra-index-url https://download.pytorch.org/whl/cu118
+```
+
+Then, based on the pytorch version you have, you will also need to update it by following [TorchText](https://github.com/pytorch/text). Since we are using Pytorch 2.1.0, we require torch text `0.16.0`.
+
+```bash
+pip install torchtext==0.16.0
+```
+
+After this, you should run the above command again
+
+
+```bash
+pip3 install torch torchvision torchaudio --force-reinstall  --extra-index-url https://download.pytorch.org/whl/cu118
+```
+
+Finally, to check everything is working as intended: 
+
+```python
+import torch
+torch.cuda.is_available()
+torch.tensor([1.0, 2.0]).cuda()
+```
+
+To install [open_clip](https://github.com/mlfoundations/open_clip) (please refer to link for latest instructions)
+
+```bash
+pip install open_clip_torch
+```
+
+## Running models
+
+Running models can be found at the documentation found [here](https://github.com/facebookresearch/mmf/tree/main/projects/hateful_memes).
+
+Here are some examples with our CLIP text embeddings:
+
+```bash
+mmf_run config=projects/hateful_memes/configs/open_clip_text_encoding/defaults.yaml model=open_clip_text_encoding dataset=hateful_memes
+```
+
+For example if we want to include the Memotion dataset:
+
+```bash
+mmf_run config=projects/hateful_memes/configs/open_clip_text_encoding/defaults.yaml model=open_clip_text_encoding dataset=hateful_memes dataset_config.hateful_memes.annotations.train[0]=hateful_memes/defaults/annotations/train_with_memotion.jsonl dataset_config.hateful_memes.features.train[0]=hateful_memes/defaults/feature_test/detectron.lmdb
+```
+
+To get test/validation results after you have created your model artifact:
+
+
+```bash
+mmf_run config=projects/hateful_memes/configs/open_clip_text_encoding/defaults.yaml model=open_clip_text_encoding dataset=hateful_memes run_type=test checkpoint.resume_file=save/open_clip_text_encoding_final.pth checkpoint.resume_pretrained=False
+```
+
+## Adding Memotion data set
+
+<TODO>
