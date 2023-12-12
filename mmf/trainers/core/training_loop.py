@@ -179,6 +179,7 @@ class TrainerTrainingLoopMixin(ABC):
             loss_dict = report.losses
             nan_loss_keys = []
             for key, value in loss_dict.items():
+                # print("LOSS KEY VALUE", key , value)
                 if torch.any(torch.isnan(value)).item():
                     nan_loss_keys.append(key)
             if len(nan_loss_keys) > 0:

@@ -404,6 +404,8 @@ def _add_extra_args_for_dataloader(
 
 def build_optimizer(model, config):
     optimizer_config = config.optimizer
+    print("CONFIG", config )
+    print("OPTIMIZER CONFIG", optimizer_config)
     if "type" not in optimizer_config:
         raise ValueError(
             "Optimizer attributes must have a 'type' key "
