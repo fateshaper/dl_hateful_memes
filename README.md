@@ -109,7 +109,7 @@ mmf_convert_hm --zip_file=data.zip --password=password --bypass_checksum=1
 ```
 to have already genereated the initial Hateful Memes dataset directory. 
 
-4) Run the add_memotion script to copy Memotion dataset images into the original hateful memes images folder, and create a new jsonl combining both the hateful memes dataset and the memotion dataset
+4) Run the add_memotion script to copy Memotion dataset images into the original hateful memes images folder, and create a new jsonl combining both the hateful memes dataset and the memotion dataset. As not all memotion data is correctly labelled, the script only adds a filtered version of the correctly labelled memotion dataset (which can be viewed in ) ```label_memotion.jsonl```. This filtered dataset was created by the Hate Detectron team (Velioglu R. & Rose J.),  and can be found in the following repo [here](https://github.com/rizavelioglu/hateful_memes-hate_detectron/blob/main/notebooks/%5BGitHub%5Dend2end_process.ipynb)
 ```python
 add_memotion.py
 ```
