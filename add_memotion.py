@@ -12,7 +12,6 @@ from mmf.utils.configuration import Configuration
 # 4. Run this python script from mmf root folder
 # To run with original training set, use mmf_run config=projects/hateful_memes/configs/mmbt/defaults.yaml model=mmbt dataset=hateful_memes  dataset_config.hateful_memes.annotations.val[0]=hateful_memes/defaults/annotations/train.jsonl
 # To run with original training set + memotion, use mmf_run config=projects/hateful_memes/configs/mmbt/defaults.yaml model=mmbt dataset=hateful_memes  dataset_config.hateful_memes.annotations.val[0]=hateful_memes/defaults/annotations/train_with_memotion.jsonl
-
 # Citation : Cleaned memotion dataset & labelling is from the  HateDetectron submission. Flow of adding the memotion dataset to the existing hateful_meme dataset is also based on their workflow, which can be found in this link  https://colab.research.google.com/drive/1O0m0j9_NBInzdo3K04jD19IyOhBR1I8i?usp=sharing#scrollTo=EgtqtKPGpKQb
 
 print("Reading label_memotion.jsonl")
@@ -25,24 +24,24 @@ configuration = Configuration()
 config = configuration.get_config()
 data_dir = config.env.data_dir
 hateful_memes_img_dir = data_dir + "/datasets/hateful_memes/defaults/images/img"
-# print("Dataset location of original hateful memes is ", hateful_memes_img_dir)
+print("Dataset location of original hateful memes is ", hateful_memes_img_dir)
 
-# # # Copy over memotion dataset images in original hateful_memes dataset
+# # # # Copy over memotion dataset images in original hateful_memes dataset
 # for img in memotion_image_labels:
 #     shutil.copy(f"{img_dir+img}", os.path.join(hateful_memes_img_dir, f"{img}"))
 #     print("Copied ", img , "into hateful_memes dataset directory")
 
-print("Reading original hateful memes training set info: train.jsonl ")
-train = pd.read_json(os.path.join(data_dir, "datasets/hateful_memes/defaults/annotations/train.jsonl"), lines=True)
-# Load labeled Memotion data
-memotion = pd.read_json("./label_memotion.jsonl", lines=True)
-train = pd.concat([train, memotion], axis=0)
-# Shuffle data
-train = train.sample(frac=1).reset_index(drop=True)
+# print("Reading original hateful memes training set info: train.jsonl ")
+# train = pd.read_json(os.path.join(data_dir, "datasets/hateful_memes/defaults/annotations/train.jsonl"), lines=True)
+# # Load labeled Memotion data
+# memotion = pd.read_json("./label_memotion.jsonl", lines=True)
+# train = pd.concat([train, memotion], axis=0)
+# # Shuffle data
+# train = train.sample(frac=1).reset_index(drop=True)
 
-# Write new jsonl file
-train_json = train.to_json(orient='records', lines=True)
+# # Write new jsonl file
+# train_json = train.to_json(orient='records', lines=True)
 
-with open(os.path.join(data_dir, "datasets/hateful_memes/defaults/annotations/train_with_memotion.jsonl"), "w", encoding='utf-8') as memotion_file:
-    memotion_file.write(train_json)
-    print("Created train_with_memotion.jsonl at ",os.path.join(data_dir, "datasets/hateful_memes/defaults/annotations/train_with_memotion.jsonl") )
+# with open(os.path.join(data_dir, "datasets/hateful_memes/defaults/annotations/train_with_memotion.jsonl"), "w", encoding='utf-8') as memotion_file:
+#     memotion_file.write(train_json)
+#     print("Created train_with_memotion.jsonl at ",os.path.join(data_dir, "datasets/hateful_memes/defaults/annotations/train_with_memotion.jsonl") )
