@@ -96,5 +96,49 @@ mmf_run config=projects/hateful_memes/configs/open_clip_text_encoding/defaults.y
 ```
 
 ## Adding Memotion data set
+To add the memotion data set to the existing hateful memes dataset, please execute the following steps:
+1) Download the memotion data set from the kaggle link below 
+``` 
+https://colab.research.google.com/corgiredirector?site=https%3A%2F%2Fwww.kaggle.com%2Fwilliamscott701%2Fmemotion-dataset-7k
+```
+2) Extract the zip to this root folder (dl_hateful_memes) - the folder extracted should be "memotion_dataset_7k"
 
-<TODO>
+3) Ensure you have already run  
+```
+mmf_convert_hm --zip_file=data.zip --password=password --bypass_checksum=1
+```
+to have already genereated the initial Hateful Memes dataset directory. 
+
+4) Run the add_memotion script to copy Memotion dataset images into the original hateful memes images folder, and create a new jsonl combining both the hateful memes dataset and the memotion dataset
+```python
+add_memotion.py
+```
+
+5) Verify that the new jsonl file has been created combining both hateful memes and memotion datasets by navigating to the data directory where your original hateful memes dataset is - you should see a new file in the annotations folder
+```
+train_with_memotion.jsonl
+```
+
+## Extracting features from newly added memotion dataset
+Feature extraction steps can be found in  [here](https://mmf.sh/docs/tutorials/image_feature_extraction/). The source code files in this directory for the image feature extraction has been updated to ensure compatibility with Python 3.8 
+1) Install the required packages 
+
+```
+pip install ninja yacs cython matplotlib
+```
+
+2) Clone and install Pytorch Detection
+```
+git clone https://gitlab.com/vedanuj/vqa-maskrcnn-benchmark.git
+cd vqa-maskrcnn-benchmark
+python setup.py build develop
+```
+
+3) Run the following command from the root folder to extract the features from all the newly added memotion images. Replace the output folder and image_dir your system specific output folder and image directory where the memotion & hateful meme dataset images are found
+```python
+tools/scripts/features/extract_features_vmb.py  --config_file "X-152" --model_name "X-152" --output_folder "/home/yxtop/.cache/torch/mmf/data/datasets/hateful_memes/defaults/feature_test" --image_dir "/home/yxtop/.cache/torch/mmf/data/datasets/hateful_memes/defaults/images/img" --num_features 100
+```
+
+4) Run the LMDB conversion script from the root folder as below to convert the previously extracted features into a LMDB. Replace the lmdb_path and features_folder as per your system specific folder
+```python
+tools/scripts/features/lmdb_conversion.py  --mode "convert" --lmdb_path "/home/yxtop/.cache/torch/mmf/data/datasets/hateful_memes/defaults/feature_test/detectron.lmdb" --feature_folder "/home/yxtop/.cache/torch/mmf/data/datasets/hateful_memes/defaults/feature_test"
