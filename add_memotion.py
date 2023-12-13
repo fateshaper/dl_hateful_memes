@@ -13,6 +13,14 @@ from mmf.utils.configuration import Configuration
 # To run with original training set, use mmf_run config=projects/hateful_memes/configs/mmbt/defaults.yaml model=mmbt dataset=hateful_memes  dataset_config.hateful_memes.annotations.val[0]=hateful_memes/defaults/annotations/train.jsonl
 # To run with original training set + memotion, use mmf_run config=projects/hateful_memes/configs/mmbt/defaults.yaml model=mmbt dataset=hateful_memes  dataset_config.hateful_memes.annotations.val[0]=hateful_memes/defaults/annotations/train_with_memotion.jsonl
 # Citation : Cleaned memotion dataset & labelling is from the  HateDetectron submission. Flow of adding the memotion dataset to the existing hateful_meme dataset is also based on their workflow, which can be found in this link  https://colab.research.google.com/drive/1O0m0j9_NBInzdo3K04jD19IyOhBR1I8i?usp=sharing#scrollTo=EgtqtKPGpKQb
+# @article{velioglu2020hateful,
+#   author = {Velioglu, Riza and Rose, Jewgeni},
+#   title = {Detecting Hate Speech in Memes Using Multimodal Deep Learning Approaches: Prize-winning solution to Hateful Memes Challenge},
+#   doi = {https://doi.org/jhb3}, 
+#   publisher = {arXiv},
+#   year = {2020}, 
+# }
+
 
 print("Reading label_memotion.jsonl")
 labeled_memo_samples = pd.read_json("./label_memotion.jsonl", lines=True)['img']
